@@ -1,0 +1,27 @@
+Project 12: Novels’s book Analysis
+
+This project aims to investigate the structure and stylistic properties of a Novel book Jane Austen's Pride and Prejudice available at Gutenberg resource, accessible from NLTK library, focusing on issues of manners, morality, and marriage in 19th-century England.
+
+1. By utilizing all textbook as input, we want to elucidate the importance of individual characters. For this purpose, suggest a script that records the number of occurrences of each character in the whole textbook. Next, we assume the importance of the characters is indicated by the number of citations each character is receiving in the text statement. Summarize the result in a table indicating the importance of the characters according to i) frequency of occurrence of characters, ii) citations count of the characters.
+
+2. Suggest a script that gathers the text stated by each character, excluding the citation quotation, and group all text stated by a given character, as a single dataframe, and then, elucidate each dataframe by identifying its vocabulary set, vocabulary size, total number of tokens, total number of adjectives, total number of adverbs, total number of verbs, total number of nouns. Summarize in a table the above main statistical characteristics.
+
+3. Write a script that draws the evolution of the vocabulary size with respect to the number of tokens for each dataframe, and then study the fitting of the Heap’s law and its statistical significance in terms of R- squared and adjusted R-squared statistics. Comment on the talkativity of each character.
+
+4. Consider the modal verbs (can, may, must, shall, will, could, might, should, would), write a script that tracks the occurrence of modal verbs in each dataframe, then plot a graph showing the evolution of the number of modal verbs employed with respect to the number of tokens, and then study the possible fitting of a polynomial interpolation cure, indicating the 90% confidence curve as well. Comment on the difference between the usage of modal verbs by each character.
+
+5. Suggest a script that identifies the five most frequent tokens, excluding the stopwords and uncommon characters in the whole textbook, then, estimate the frequency of occurrence each of these words in each dataframe of an individual character, yielding a five dimension vector for each character. Calculate the similarity of each pair of characters using cosine similarity of the corresponding vectors. Summarize the result in a table.
+
+6. We want to study the topical trend of each character. For this purpose, use the LDA with 5 topics and 10 keywords per topic, then generate the LDA outcome for each dataframe (character related corpus). Suggest an approach to evaluate the topical similarity between the different characters, generate the similarity matrix showing the similarity score for every pair of characters.
+
+7. Repeat 6) when an LLM based approach of your choice is employed.
+
+8. Suggest a script that generates embedding vector for each dataframe using BERT embedding. Then use the cosine similarity to evaluate the topical similarity between every pair of characters. Comment on the comparison between the embedding and LDA approaches.
+
+9. Repeat 6) when empath category-based embedding https://github.com/Ejhfast/empath-client is employed. Summarize the result in a matrix and comment on the results.
+
+10. Now we want to track individual messages by each character. For this purpose, suggest a script that uses sentiWordNet lexicon GitHub - aesuli/SentiWordNet: The SentiWordNet sentiment lexicon, where each token is assigned a positive and negative score, if no lexicon is found, it is neutral, to determine the sentiment of each character message by summing up and averaging overall sentiment scores across all the lexicon terms. Then represents each character’s message as a point in a triangle-based illustration with nodes corresponding to positive, negative and neutral. Trace the plot corresponding to each character.
+
+11. Use appropriate literature to comment on the findings. Also, identify any additional input that would allow you to further elucidate any of the preceding, and use appropriate literature of corpus linguistic literature to justify your findings and comment on the obtained results. Finally, comment on the limitations and structural weakness of the data processing pipeline.
+
+
