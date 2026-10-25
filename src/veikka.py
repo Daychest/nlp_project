@@ -1,6 +1,7 @@
 from pandas import DataFrame
 from sklearn.metrics.pairwise import cosine_similarity
 from collections import Counter
+import statsmodels.api as sm
 from nltk.corpus import stopwords
 import numpy as np
 import matplotlib.pyplot as plt
@@ -9,7 +10,6 @@ import nltk
 import re
 import requests
 from gensim import corpora
-import pickle
 import gensim
 
 
@@ -180,6 +180,8 @@ def task4():
 
     speechAsTokens = getSpeechAsTokens()
 
+    # todo: normalize graph?
+    displayRaw = False
     for person, tokens in speechAsTokens.items():
         xEntries = []
         yEntries = []
@@ -193,13 +195,45 @@ def task4():
             xEntries.append(tokenCount)
             yEntries.append(modalVerbCount)
 
-        plt.plot(xEntries, yEntries, label=person)
+        # Calculate fitted values
+        a, b = np.polyfit(xEntries, yEntries, 1)
+        yEntriesFitted = []
+        for xEntry in xEntries:
+            yFitted = a * xEntry + b
+            yEntriesFitted.append(yFitted)
+
+        if displayRaw:
+            # Draw raw data
+            plt.plot(xEntries, yEntries, label=person)
+        else:
+            # Draw fitted line
+            plt.plot(xEntries, yEntriesFitted, label=person)
+            # Draw confidence interval
+            xEntries = np.array(xEntries)
+            yEntries = np.array(yEntries)
+            xEntriesConst = sm.add_constant(xEntries)
+            model = sm.OLS(yEntries, xEntriesConst).fit()
+            xPredictions = np.linspace(xEntries.min(), xEntries.max())
+            xPredictionsConst = sm.add_constant(xPredictions)
+            pred = model.get_prediction(
+                xPredictionsConst).summary_frame(alpha=0.10)
+            plt.fill_between(
+                xPredictions,
+                pred["obs_ci_lower"],
+                pred["obs_ci_upper"],
+                alpha=0.5,
+            )
 
     plt.xlabel("Number of tokens")
     plt.ylabel("Number of modal verbs")
     plt.title("Modal verbs compared to total tokens for each character")
     plt.legend()
     plt.show()
+
+    # The number of modal verbs seems to increase linearly with the number of tokens.
+
+    # The characters seem to use modal verbs with similar frequencies, although
+    # Jane does stand out as the most frequent modal verb user.
 
 
 def getBookTokens():
@@ -315,6 +349,7 @@ def task6():
         for topicId, words in topics:
             for word, probability in words:
                 if word in speechAsFilteredTokens[person]:
+                    # todo: multiply by count?
                     personTopicSimilarities[person][topicId] += probability
 
     print("Each person's similarity with each topic:")
@@ -329,4 +364,4 @@ def task6():
     printMatrix(cosineSimilarityMatrix, columnLabels=people, rowLabels=people)
 
 
-task6()
+task4()
