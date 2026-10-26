@@ -243,19 +243,19 @@ def getBookTokens():
     return tokens
 
 
-def printMatrix(matrix, rowLabels=None, columnLabels=None, decimalCount=2):
+def printMatrix(matrix, rowLabels=None, columnLabels=None, decimalCount=2, labels=True):
     dataFrame = DataFrame(
         matrix,
         columns=columnLabels,
         index=rowLabels
     )
-    print(dataFrame.round(decimalCount))
+    print(dataFrame.round(decimalCount).to_string(header=labels, index=labels))
 
 
 def filterTokenList(tokenList):
     generalStopWords = stopwords.words('english')
-    manualStopWords = ['must', 'one', 'shall',
-                       'could', 'would', 'may', 'think', 'must', 'us', 'much']
+    manualStopWords = ['must', 'one', 'shall', 'could', 'would', 'may', 'think', 'must',
+                       'us', 'much', 'well', 'know', 'never', 'see', 'good', 'oh', 'ever', 'always', 'make', 'sure', 'dear', 'indeed']
 
     filteredTokens = []
     for token in tokenList:
@@ -288,6 +288,10 @@ def task5():
 
     counter = Counter(filteredTokens)
     mostCommon = counter.most_common(5)
+    tokenArray, countArray = zip(*mostCommon)
+    print("Most frequent tokens in the whole textbook:")
+    printMatrix([tokenArray, countArray], labels=False)
+    print()
 
     mostCommonVector = []
     for token, count in mostCommon:
@@ -345,12 +349,14 @@ def task6():
 
     personTopicSimilarities = dict()
     for person in people:
+        counter = Counter(speechAsFilteredTokens[person])
+
         personTopicSimilarities[person] = [0, 0, 0, 0, 0]
         for topicId, words in topics:
             for word, probability in words:
                 if word in speechAsFilteredTokens[person]:
-                    # todo: multiply by count?
-                    personTopicSimilarities[person][topicId] += probability
+                    weight = probability * counter[word]
+                    personTopicSimilarities[person][topicId] += weight
 
     print("Each person's similarity with each topic:")
     printMatrix(personTopicSimilarities)
@@ -364,4 +370,4 @@ def task6():
     printMatrix(cosineSimilarityMatrix, columnLabels=people, rowLabels=people)
 
 
-task4()
+task6()
