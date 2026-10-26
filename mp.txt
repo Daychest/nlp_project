@@ -4,10 +4,10 @@ Veli-Pekka Salmi - vsalmi23@student.oulu.fi
 1, 2, 3
 
 Rasmus Hintz-Madsen – rhintzma23@student.oulu.fi 
-8, 10
+7, 8, 10
 
 Veikka Päivärinta - vpaivari23@student.oulu.fi
-4, 5, 6
+4, 5, 6, 9
 
 Deadlines:
 powerpoint esitys 26.10.2026
