@@ -1,5 +1,9 @@
+import json
+import os
 import re
 from math import ceil
+from collections import Counter
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import mpltern
@@ -7,7 +11,10 @@ import nltk
 import pandas as pd
 import requests
 import torch
+from dotenv import load_dotenv
 from nltk.corpus import sentiwordnet as swn
+from nltk.corpus import stopwords
+from pandas import DataFrame
 from nltk.stem import WordNetLemmatizer
 from nltk.wsd import lesk
 from sklearn.metrics.pairwise import cosine_similarity
@@ -53,6 +60,113 @@ def getSpeech():
                 speech[name].extend(quotes)
                 break
     return speech
+
+
+def getSpeechAsTokens():
+    tokenDict = dict()
+    speech = getSpeech()
+    for person, quotes in speech.items():
+        quotesString = ' '.join(quotes)
+        quotesString = quotesString.lower()
+        tokens = nltk.word_tokenize(quotesString)
+        tokenDict[person] = tokens
+    return tokenDict
+
+
+def printMatrix(matrix, rowLabels=None, columnLabels=None, decimalCount=2, labels=True):
+    dataFrame = DataFrame(
+        matrix,
+        columns=columnLabels,
+        index=rowLabels
+    )
+    print(dataFrame.round(decimalCount).to_string(header=labels, index=labels))
+
+
+def filterTokenList(tokenList):
+    generalStopWords = stopwords.words('english')
+    manualStopWords = ['must', 'one', 'shall', 'could', 'would', 'may', 'think', 'must',
+                       'us', 'much', 'well', 'know', 'never', 'see', 'good', 'oh', 'ever', 'always', 'make', 'sure', 'dear', 'indeed']
+
+    filteredTokens = []
+    for token in tokenList:
+        # Tokens have to be alphanumeric
+        if not token.isalnum():
+            continue
+        # Tokens cannot be stopwords
+        if token in generalStopWords:
+            continue
+        if token in manualStopWords:
+            continue
+        filteredTokens.append(token)
+
+    return filteredTokens
+
+
+def getSpeechAsFilteredTokens():
+    speechAsTokens = getSpeechAsTokens()
+
+    speechAsFilteredTokens = dict()
+    for person, tokens in speechAsTokens.items():
+        speechAsFilteredTokens[person] = filterTokenList(tokens)
+
+    return speechAsFilteredTokens
+
+
+def task7():
+    speechAsFilteredTokens = getSpeechAsFilteredTokens()
+    people = speechAsFilteredTokens.keys()
+    filteredTokenLists = list(speechAsFilteredTokens.values())
+
+    topicCount = 5
+    keywordCount = 10
+    load_dotenv(Path(__file__).resolve().parents[1] / ".env")
+    model = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
+    # Prompt generated with help of ChatGPT
+    prompt = (
+        f"Find {topicCount} shared topics in these dialogue collections. "
+        f"For each topic choose {keywordCount} keywords from the supplied tokens. "
+        "Assign positive keyword weights summing to one within each topic. "
+        'Return JSON as {"topics": [[0, [["word", 0.1], ...]], ...]}. '
+        "Use topic IDs 0 to 4.\n" + json.dumps(filteredTokenLists)
+    )
+    # https://ai.google.dev/api/generate-content#method:-models.generatecontent
+    response = requests.post(
+        f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+        headers={"x-goog-api-key": os.environ["GEMINI_API_KEY"]},
+        json={
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0, "responseMimeType": "application/json"},
+        },
+        timeout=180,
+    )
+    text = response.json()["candidates"][0]["content"]["parts"][-1]["text"]
+    topics = json.loads(text)["topics"]
+    print("Topics:")
+    for topic in topics:
+        print(topic)
+    print()
+
+    personTopicSimilarities = dict()
+    for person in people:
+        counter = Counter(speechAsFilteredTokens[person])
+
+        personTopicSimilarities[person] = [0, 0, 0, 0, 0]
+        for topicId, words in topics:
+            for word, probability in words:
+                if word in speechAsFilteredTokens[person]:
+                    weight = probability * counter[word]
+                    personTopicSimilarities[person][topicId] += weight
+
+    print("Each person's similarity with each topic:")
+    printMatrix(personTopicSimilarities)
+    print()
+
+    personTopicSimilarityMatrix = list(personTopicSimilarities.values())
+    cosineSimilarityMatrix = cosine_similarity(
+        personTopicSimilarityMatrix, personTopicSimilarityMatrix)
+
+    print("Topic similarity between characters using cosine similarity")
+    printMatrix(cosineSimilarityMatrix, columnLabels=people, rowLabels=people)
 
 
 def getBertVector(text, tokenizer, model):
@@ -144,6 +258,7 @@ def task10(dataframes):
 
 
 def main():
+    nltk.download("stopwords")
     nltk.download("punkt_tab")
     nltk.download("averaged_perceptron_tagger_eng")
     nltk.download("wordnet")
@@ -154,6 +269,7 @@ def main():
         if quotes:
             dataframes[name] = pd.DataFrame({"text": quotes})
 
+    task7()
     task8(dataframes)
     task10(dataframes)
 

@@ -1,0 +1,30 @@
+Topics:
+[0, [['collins', 0.1], ['marriage', 0.1], ['married', 0.1], ['husband', 0.1], ['lady', 0.1], ['catherine', 0.1], ['refusal', 0.1], ['daughter', 0.1], ['estate', 0.1], ['offer', 0.1]]]
+[1, [['dancing', 0.1], ['dance', 0.1], ['ball', 0.1], ['partner', 0.1], ['music', 0.1], ['play', 0.1], ['sing', 0.1], ['assemblies', 0.1], ['meryton', 0.1], ['room', 0.1]]]
+[2, [['darcy', 0.1], ['pride', 0.1], ['character', 0.1], ['opinion', 0.1], ['disposition', 0.1], ['manners', 0.1], ['vanity', 0.1], ['virtue', 0.1], ['understanding', 0.1], ['respect', 0.1]]]
+[3, [['colonel', 0.1], ['forster', 0.1], ['wickham', 0.1], ['lydia', 0.1], ['officers', 0.1], ['brighton', 0.1], ['captain', 0.1], ['fun', 0.1], ['aunt', 0.1], ['philips', 0.1]]]
+[4, [['bingley', 0.1], ['jane', 0.1], ['sister', 0.1], ['love', 0.1], ['netherfield', 0.1], ['town', 0.1], ['affection', 0.1], ['caroline', 0.1], ['happy', 0.1], ['heart', 0.1]]]
+
+Each person's similarity with each topic:
+   Elizabeth  Darcy  Jane  Bingley  Wickham  Lydia  Mrs. Bennet  Mr. Bennet  Collins  Charlotte  Lady Catherine  Kitty  Mary
+0        2.3    0.1   0.3      0.0      0.1    0.7          0.8         0.4      0.7        0.9             0.4    0.0   0.0
+1        0.7    1.1   0.0      0.2      0.0    0.3          0.0         0.1      0.0        0.2             0.0    0.1   0.0
+2        3.3    1.4   1.0      1.3      1.0    0.0          0.4         0.0      0.0        0.5             0.3    0.0   0.7
+3        1.4    0.0   0.3      0.0      0.0    2.9          0.5         0.3      0.0        0.2             0.1    0.5   0.0
+4        3.8    0.6   2.4      0.6      0.0    0.2          1.7         0.6      0.1        0.9             0.0    0.0   0.2
+
+Topic similarity between characters using cosine similarity
+                Elizabeth  Darcy  Jane  Bingley  Wickham  Lydia  Mrs. Bennet  Mr. Bennet  Collins  Charlotte  Lady Catherine  Kitty  Mary
+Elizabeth            1.00   0.73  0.89     0.81     0.61   0.38         0.90        0.81     0.49       0.94            0.70   0.26  0.73
+Darcy                0.73   1.00  0.58     0.88     0.75   0.09         0.44        0.34     0.10       0.59            0.48   0.11  0.80
+Jane                 0.89   0.58  1.00     0.72     0.39   0.20         0.93        0.80     0.24       0.81            0.34   0.11  0.62
+Bingley              0.81   0.88  0.72     1.00     0.89   0.04         0.54        0.33     0.06       0.61            0.53   0.03  0.98
+Wickham              0.61   0.75  0.39     0.89     1.00   0.02         0.24        0.05     0.10       0.42            0.66   0.00  0.96
+Lydia                0.38   0.09  0.20     0.04     0.02   1.00         0.39        0.55     0.24       0.35            0.37   0.97  0.02
+Mrs. Bennet          0.90   0.44  0.93     0.54     0.24   0.39         1.00        0.95     0.52       0.92            0.48   0.25  0.43
+Mr. Bennet           0.81   0.34  0.80     0.33     0.05   0.55         0.95        1.00     0.61       0.89            0.47   0.40  0.21
+Collins              0.49   0.10  0.24     0.06     0.10   0.24         0.52        0.61     1.00       0.73            0.78   0.00  0.04
+Charlotte            0.94   0.59  0.81     0.61     0.42   0.35         0.92        0.89     0.73       1.00            0.74   0.17  0.52
+Lady Catherine       0.70   0.48  0.34     0.53     0.66   0.37         0.48        0.47     0.78       0.74            1.00   0.19  0.57
+Kitty                0.26   0.11  0.11     0.03     0.00   0.97         0.25        0.40     0.00       0.17            0.19   1.00  0.00
+Mary                 0.73   0.80  0.62     0.98     0.96   0.02         0.43        0.21     0.04       0.52            0.57   0.00  1.00
