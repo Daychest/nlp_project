@@ -253,10 +253,21 @@ def printMatrix(matrix, rowLabels=None, columnLabels=None, decimalCount=2, label
     print(dataFrame.round(decimalCount).to_string(header=labels, index=labels))
 
 
+def printMatrixTransposed(matrix, rowLabels=None, columnLabels=None, decimalCount=2, labels=True):
+    dataFrame = DataFrame(
+        matrix,
+        columns=columnLabels,
+        index=rowLabels
+    )
+    print(dataFrame.T.round(decimalCount).to_string(header=labels, index=labels))
+
+
 def filterTokenList(tokenList):
     generalStopWords = stopwords.words('english')
-    manualStopWords = ['must', 'one', 'shall', 'could', 'would', 'may', 'think', 'must',
-                       'us', 'much', 'well', 'know', 'never', 'see', 'good', 'oh', 'ever', 'always', 'make', 'sure', 'dear', 'indeed']
+    manualStopWords = ['must', 'one', 'shall', 'could', 'would', 'may', 'think', 'must', 'us', 'much',
+                       'well', 'know', 'never', 'see', 'good', 'oh', 'ever', 'always', 'make', 'sure', 'dear', 'indeed', 'better',
+                       'man', 'nothing', 'like', 'young', 'miss', 'give', 'say', 'hope', 'really', 'certainly',
+                       'way', 'manner', 'go', 'little', 'let', 'time', 'ask', 'great', 'last', 'upon', 'often', 'quite', 'soon', 'come', 'tell']
 
     filteredTokens = []
     for token in tokenList:
@@ -360,7 +371,7 @@ def task6():
                     personTopicSimilarities[person][topicId] += weight
 
     print("Each person's similarity with each topic:")
-    printMatrix(personTopicSimilarities)
+    printMatrixTransposed(personTopicSimilarities)
     print()
 
     personTopicSimilarityMatrix = list(personTopicSimilarities.values())
@@ -378,10 +389,10 @@ def task9():
     vectorDict = dict()
     speech = getSpeech()
     for person, text in speech.items():
-        empathDict[person] = lexicon.analyze(text, normalize=True)
+        empathDict[person] = lexicon.analyze(text, normalize=False)
         vectorDict[person] = list(empathDict[person].values())
 
-    # print(empathDict['Elizabeth'])
+    print(empathDict['Elizabeth'])
 
     personEmpathMatrix = list(vectorDict.values())
     cosineSimilarityMatrix = cosine_similarity(
