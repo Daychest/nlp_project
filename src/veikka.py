@@ -48,7 +48,6 @@ def fprint(str):
 
 
 def getBookText():
-    # todo: cut header?
     url = "https://www.gutenberg.org/cache/epub/1342/pg1342.txt"
     response = requests.get(url)
     return response.text
@@ -175,14 +174,12 @@ def getSpeechAsTokens():
     return tokenDict
 
 
-def task4():
+def task4(displayRaw=False):
     modalVerbs = ("can", "may", "must", "shall", "will",
                   "could", "might", "should", "would")
 
     speechAsTokens = getSpeechAsTokens()
 
-    # todo: normalize graph?
-    displayRaw = False
     for person, tokens in speechAsTokens.items():
         xEntries = []
         yEntries = []
