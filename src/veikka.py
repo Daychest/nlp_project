@@ -11,6 +11,7 @@ import re
 import requests
 from gensim import corpora
 import gensim
+from empath import Empath
 
 
 if 0:
@@ -370,4 +371,26 @@ def task6():
     printMatrix(cosineSimilarityMatrix, columnLabels=people, rowLabels=people)
 
 
-task6()
+def task9():
+    lexicon = Empath()
+
+    empathDict = dict()
+    vectorDict = dict()
+    speech = getSpeech()
+    for person, text in speech.items():
+        empathDict[person] = lexicon.analyze(text, normalize=True)
+        vectorDict[person] = list(empathDict[person].values())
+
+    # print(empathDict['Elizabeth'])
+
+    personEmpathMatrix = list(vectorDict.values())
+    cosineSimilarityMatrix = cosine_similarity(
+        personEmpathMatrix, personEmpathMatrix)
+
+    people = speech.keys()
+
+    print("Similarity between characters using empath categories")
+    printMatrix(cosineSimilarityMatrix, columnLabels=people, rowLabels=people)
+
+
+task9()
