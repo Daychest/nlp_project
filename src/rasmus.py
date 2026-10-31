@@ -204,7 +204,13 @@ def task8(dataframes):
 
 
 def getSentiment(text, lemmatizer):
-    tokens = nltk.word_tokenize(text)
+    tokens = []
+    for token in nltk.word_tokenize(text):
+        for character in token:
+            if character.isalnum():
+                tokens.append(token)
+                break
+
     tagged = nltk.pos_tag(tokens)
     positive, negative, neutral = 0.0, 0.0, 0.0
     pos_tags = {"J": "a", "N": "n", "R": "r", "V": "v"}
